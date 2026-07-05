@@ -1,12 +1,12 @@
-import PostSkeleton from './PostSkeleton'
-import './App.css'
+import { Login, Register } from './pages'
+import { Routes } from 'react-router-dom'
 
 function App() {
 
 
   return (
     <>
-
+    App
     </>
   )
 }
