@@ -26,9 +26,9 @@ function App() {
 
             <Route path="/"           element={<Feed />} />
 
-            {/* <Route path="/profile/:id"  element={<Profile />} />
-            <Route path="/post/:id"     element={<PostDetail />} />
-            <Route path="/bookmarks"    element={<Bookmarks />} /> */}
+            {/* <Route path="/profile/:id"  element={<Profile />} /> */}
+            {/* <Route path="/post/:id"     element={<PostDetail />} /> */}
+            {/* <Route path="/bookmarks"    element={<Bookmarks />} /> */}
 
           </Route>
         </Route>

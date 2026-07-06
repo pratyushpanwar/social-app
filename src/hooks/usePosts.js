@@ -1,29 +1,74 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useMutation, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../api/client";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 
 
-// GetAllPosts
-export function useGetPosts(){
-    return useQuery({
-        queryKey:['posts'],
-        queryFn: async() => {
-            const res = await api.get('/social-media/posts')
-            return res.data
-        }
-    })
-}
+// Fetch Feed
 
-// GetPostById
-export function usePost(postId){
-    return useQuery({
-        queryKey:['post', postId],
-        queryFn: async() => {
-            const res = await api.get(`/social-media/posts/${postId}`)
-            return res.data
+export function usePosts() {  
+    return useInfiniteQuery({
+        queryKey: ['posts'],
+        initialPageParam: 1,
+        queryFn: async({ pageParam}) => {
+            const res = await api.get(`/social-media/posts?page=${pageParam}&limit=10`)
+            
+            return res.data.data
         },
-        enabled: !!postId
+        getNextPageParam: (lastPage) => 
+            lastPage.hasNextPage ? lastPage.page + 1 : undefined,
+
     })
 }
 
-// CreatePost
+// Like / Unlike
+
+export function useLikePost() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (postId) =>
+      api.post(`/social-media/likes/post/${postId}`),
+
+    // runs before the API call — updates UI instantly
+    onMutate: async (postId) => {
+      await qc.cancelQueries({ queryKey: ['posts'] });
+      const previous = qc.getQueryData(['posts']);
+
+      qc.setQueryData(['posts'], (old) => ({
+        ...old,
+        pages: old.pages.map(page => ({
+          ...page,
+          posts: page.posts.map(post =>
+            post._id === postId
+              ? {
+                  ...post,
+                  isLiked: !post.isLiked,
+                  likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+                }
+              : post
+          ),
+        })),
+      }));
+
+      return { previous };
+    },
+    // if API fails → revert
+    onError: (_, __, ctx) => qc.setQueryData(['posts'], ctx.previous),
+    // always re-sync with server
+    onSettled: () => qc.invalidateQueries({ queryKey: ['posts'] }),
+  });
+}
+
+//CreatePost
+
+export function useCreatePost() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => api.post('/social-media/posts', data),
+    onSuccess: () => {
+      toast.success('Posted!');
+      qc.invalidateQueries({ queryKey: ['posts'] });
+    },
+    onError: () => toast.error('Failed to post'),
+  });
+}
+
