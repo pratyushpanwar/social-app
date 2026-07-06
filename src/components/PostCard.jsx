@@ -7,7 +7,6 @@ function PostCard({ post }) {
   const navigate = useNavigate();
   const like = useLikePost();
 
-  console.log(post);
   
   const author      = post.author || post.owner || {};
   const authorName  = author.firstName + " " + author.lastName || 'Unknown';

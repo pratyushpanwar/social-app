@@ -26,7 +26,7 @@ export function useLikePost() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (postId) =>
-      api.post(`/social-media/likes/post/${postId}`),
+      api.post(`/social-media/like/post/${postId}`),
 
     // runs before the API call — updates UI instantly
     onMutate: async (postId) => {
@@ -63,12 +63,24 @@ export function useLikePost() {
 export function useCreatePost() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data) => api.post('/social-media/posts', data),
+    mutationFn: async({content}) => {
+
+      const formData = new FormData()
+      formData.append('content',content)
+      const res = await api.post('/social-media/posts', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      })
+      return res.data;
+    },
     onSuccess: () => {
       toast.success('Posted!');
       qc.invalidateQueries({ queryKey: ['posts'] });
     },
-    onError: () => toast.error('Failed to post'),
+    onError: () => {
+      toast.error('Failed to post')
+    },
   });
 }
 
