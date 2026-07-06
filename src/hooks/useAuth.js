@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "../api/client";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setAuth } from "../store/AuthSlice";
+import { setAuth, logout } from "../store/AuthSlice";
 import { useNavigate } from "react-router-dom";
 
 
@@ -32,7 +32,7 @@ export function useRegister() {
 
 // Login
 export function useLogin() {
-
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     return useMutation({
@@ -42,7 +42,7 @@ export function useLogin() {
             const {user, accessToken} = res.data.data
             dispatch(setAuth({user, token: accessToken}))
             toast.success(`Welcome back, ${user.username}!`);
-            
+            navigate('/')
         },
         onError: (err) => {
             toast.error(err.response?.data?.message || "Login failed");
@@ -53,3 +53,17 @@ export function useLogin() {
         }
     })
 }
+
+
+    // Logout
+    export function useLogout() {
+        
+        const dispatch = useDispatch()
+        const navigate = useNavigate()
+
+        return () => {
+            dispatch(logout())
+            navigate('/login')
+            toast.success('Logged out')
+        }
+    }
