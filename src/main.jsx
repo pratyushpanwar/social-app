@@ -7,6 +7,7 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 const queryClient = new QueryClient()
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
       <Toaster position="top-center"/>
       <App/>
+      <ReactQueryDevtools initialIsOpen={false } />
       </BrowserRouter>
     </QueryClientProvider>
   </Provider>

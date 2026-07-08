@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Feed, Login, Register } from './pages'
+import { Feed, Login, Register, PostDetail } from './pages'
 import { Routes, Route } from 'react-router-dom'
 import { ProtectedRoute } from './components';
 import Layout from './components/Layout';
@@ -27,7 +27,7 @@ function App() {
             <Route path="/"           element={<Feed />} />
 
             {/* <Route path="/profile/:id"  element={<Profile />} /> */}
-            {/* <Route path="/post/:id"     element={<PostDetail />} /> */}
+            <Route path="/post/:id"     element={<PostDetail />} />
             {/* <Route path="/bookmarks"    element={<Bookmarks />} /> */}
 
           </Route>

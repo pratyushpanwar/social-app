@@ -8,8 +8,10 @@ function PostCard({ post }) {
   const like = useLikePost();
 
   
+  
   const author      = post.author || post.owner || {};
-  const authorName  = author.firstName + " " + author.lastName || 'Unknown';
+  // const authorName  = author.firstName + " " + author.lastName || 'Unknown';
+  const authorName = author.account.username || "Unknown"
   const authorAvatar = author.avatar?.url;
   const authorId    = author._id;
 

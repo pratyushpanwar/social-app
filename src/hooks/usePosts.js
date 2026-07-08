@@ -31,8 +31,12 @@ export function useLikePost() {
     // runs before the API call — updates UI instantly
     onMutate: async (postId) => {
       await qc.cancelQueries({ queryKey: ['posts'] });
-      const previous = qc.getQueryData(['posts']);
+      await qc.cancelQueries({ queryKey: ['post', postId]})
 
+      const previousFeed = qc.getQueryData(['posts']);
+      const previousPost = qc.getQueryData(['post', postId]);
+
+      if(previousFeed) {
       qc.setQueryData(['posts'], (old) => ({
         ...old,
         pages: old.pages.map(page => ({
@@ -48,15 +52,29 @@ export function useLikePost() {
           ),
         })),
       }));
+    }
 
-      return { previous };
+    if(previousPost) {
+      qc.setQueryData(['post', postId], (old) => ({
+          ...old,
+          isLiked: !old.isLiked,
+          likes: old.isLiked ? old.likes - 1 : old.likes + 1,
+        }));
+    }
+
+      return { previousFeed, previousPost };
     },
     // if API fails → revert
-    onError: (_, __, ctx) => qc.setQueryData(['posts'], ctx.previous),
+    onError: (_, __, ctx) => {
+      if (ctx?.previousFeed) qc.setQueryData(['posts'], ctx.previousFeed);
+      if (ctx?.previousPost) qc.setQueryData(['post', postId], ctx.previousPost);
+    },
     // always re-sync with server
-    onSettled: () => qc.invalidateQueries({ queryKey: ['posts'] }),
+    onSettled: (_, __, postId) => {
+      qc.invalidateQueries({ queryKey: ['posts'] });
+      qc.invalidateQueries({ queryKey: ['post', postId] });},
   });
-}
+} 
 
 //CreatePost
 
