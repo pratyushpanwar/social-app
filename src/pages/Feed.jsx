@@ -98,7 +98,7 @@ function Feed() {
         <div key={i}>
           {page.posts.map((post) => (
             <PostCard key={post._id} post={post} />
-          ))}
+          )).reverse()}
         </div>
       ))}
 

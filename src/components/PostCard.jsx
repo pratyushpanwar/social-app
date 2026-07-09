@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, MessageCircle, Bookmark } from 'lucide-react';
 import { useLikePost } from '../hooks/usePosts';
 import { timeAgo } from '../utils/formDate';
+import { useToggleBookmark } from '../hooks/useBookmarks';
 
 function PostCard({ post }) {
+  
   const navigate = useNavigate();
   const like = useLikePost();
-
+  const bookmark = useToggleBookmark();
   
   const author      = post.author || post.owner || {};
   // const authorName  = author.firstName + " " + author.lastName || 'Unknown';
@@ -101,8 +103,12 @@ function PostCard({ post }) {
         </button>
 
 
-        <button className="ml-auto text-base-content/40 hover:text-primary transition-colors">
-          <Bookmark size={16} />
+        <button 
+        className="ml-auto text-base-content/40 hover:text-primary transition-colors"
+        onClick={() => bookmark.mutate(post._id)}
+        disabled={bookmark.isPending}
+        >
+          <Bookmark size={16} fill={post.isBookmarked ? 'currentColor' : 'none'}/>
         </button>
       </div>
     </article>
