@@ -6,13 +6,13 @@ import { useLogout } from '../hooks/useAuth';
 
 function Navbar() {
 
-  const user = useSelector((state) => state.auth.useer)
+  const user = useSelector((state) => state.auth.user)
   const logout = useLogout()
-
+  
   const links = [
     { to: '/',                     Icon: Home,    label: 'Home',      end: true },
     { to: '/bookmarks',            Icon: Bookmark, label: 'Bookmarks' },
-    { to: `/profile/${user?._id}`, Icon: User,    label: 'Profile' },
+    { to: `/profile/${user?.username}`, Icon: User,    label: 'Profile' },
   ]
   return (
     <aside className="w-16 lg:w-60 h-screen sticky top-0 bg-base-100 border-r border-base-200 flex flex-col p-3">
@@ -51,7 +51,7 @@ function Navbar() {
         <div className="flex items-center gap-3 px-2 mb-2">
           <div className="avatar placeholder flex-shrink-0">
             <div className="bg-primary text-primary-content rounded-full w-8">
-              <span className="text-sm">
+              <span className="text-sm relative left-3 top-0.5">
                 {user?.username?.[0]?.toUpperCase()}
               </span>
             </div>

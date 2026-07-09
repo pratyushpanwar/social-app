@@ -8,7 +8,6 @@ function PostCard({ post }) {
   const like = useLikePost();
 
   
-  
   const author      = post.author || post.owner || {};
   // const authorName  = author.firstName + " " + author.lastName || 'Unknown';
   const authorName = author.account.username || "Unknown"
@@ -16,7 +15,7 @@ function PostCard({ post }) {
   const authorId    = author._id;
 
   const goToPost    = ()  => navigate(`/post/${post._id}`);
-  const goToProfile = (e) => { e.stopPropagation(); navigate(`/profile/${authorId}`); };
+   const goToProfile = (e) => { e.stopPropagation(); navigate(`/profile/${authorName}`); };
 
   return (
     <article
@@ -85,7 +84,7 @@ function PostCard({ post }) {
               ? 'text-red-500'
               : 'text-base-content/40 hover:text-red-400'
             }`}
-          onClick={() => like.mutate(post._id)}
+          onClick={() => like.mutate({postId: post._id, username: authorName})}
           disabled={like.isPending}
         >
           <Heart size={16} fill={post.isLiked ? 'currentColor' : 'none'} />
