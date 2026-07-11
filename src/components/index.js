@@ -1,4 +1,4 @@
-import NavBar from "./Navbar";
+import Navbar from "./Navbar";
 import PostCard from "./PostCard";
 import ProtectedRoute from "./ProtectedRoute";
 import Input from './Input'
@@ -9,7 +9,7 @@ export {
     PostCard,
     ProtectedRoute,
     Input,
-    NavBar,
+    Navbar,
     Layout,
     PostSkeleton,
     
