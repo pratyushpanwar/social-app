@@ -4,6 +4,7 @@ import Register from "./Register";
 import Login from "./Login";
 import PostDetail from "./PostDetail";
 import Bookmarks from "./Bookmarks";
+import EditProfile from "./EditProfile";
 
 export {
     Feed,   
@@ -12,4 +13,6 @@ export {
     Login,
     PostDetail,
     Bookmarks,
+    EditProfile,
+    
 }

@@ -13,7 +13,7 @@ function PostCard({ post }) {
   const author      = post.author || post.owner || {};
   // const authorName  = author.firstName + " " + author.lastName || 'Unknown';
   const authorName = author.account.username || "Unknown"
-  const authorAvatar = author.avatar?.url;
+  const authorAvatar = author.account.avatar?.url;
   const authorId    = author._id;
 
   const goToPost    = ()  => navigate(`/post/${post._id}`);

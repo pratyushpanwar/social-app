@@ -23,7 +23,7 @@ function Profile() {
 
   const fullName = `${profile?.firstName} ${profile?.lastName}`
 
-  
+  console.log(profile)
   
   // ── Loading ──────────────────────────────────────────────
   if (isLoading) {
@@ -107,7 +107,10 @@ function Profile() {
         {/* Follow / Edit button */}
         <div className="flex justify-end mb-3">
           {isOwnProfile ? (
-            <button className="btn btn-sm btn-outline rounded-full">
+            <button 
+            className="btn btn-sm btn-outline rounded-full"
+            onClick={() => navigate('/edit-profile')}
+            >
               Edit profile
             </button>
           ) : (
