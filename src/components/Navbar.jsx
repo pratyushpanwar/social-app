@@ -12,7 +12,7 @@ function Navbar() {
   const links = [
     { to: '/',                     Icon: Home,    label: 'Home',      end: true },
     { to: '/bookmarks',            Icon: Bookmark, label: 'Bookmarks' },
-    { to: `/profile/${user?.username}`, Icon: User,    label: 'Profile' },
+    { to: `/profile/${user?.account?.username}`, Icon: User,    label: 'Profile' },
   ]
   return (
     <aside className="w-16 lg:w-60 h-screen sticky top-0 bg-base-100 border-r border-base-200 flex flex-col p-3">

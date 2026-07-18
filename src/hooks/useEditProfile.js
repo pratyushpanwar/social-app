@@ -17,7 +17,7 @@ export function useUpdateProfile(){
             diapatch(setAuth({ user: {...user, ...updated }, token }))
             qc.invalidateQueries({ queryKey: ['profile'] })
             toast.success('Profile updated!');
-            navigate(`/profile/${updated.username ?? user.username}`);
+            navigate(`/profile/${updated.account.username ?? user.account.username}`);
         },
         onError:(err) => {
         toast.error(err.response?.data?.message || 'Failed to update profile')  

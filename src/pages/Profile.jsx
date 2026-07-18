@@ -1,29 +1,32 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ArrowLeft, UserCheck, UserPlus } from 'lucide-react';
-import { useProfile, useUserPosts } from '../hooks/useProfile';
+import { useMyProfile, useProfile, useUserPosts } from '../hooks/useProfile';
 import { useFollow } from '../hooks/useFollow';
 import PostCard from '../components/PostCard';
 import PostSkeleton from '../components/PostSkeleton';
 import { useState } from 'react';
 
 function Profile() {
+  useMyProfile()
   const { username } = useParams();
+  console.log(username);
+  
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.auth.user);
-
+  
   const { data: profile, isLoading, isError, error } = useProfile(username);
   const { data: posts = [], isLoading: postsLoading } = useUserPosts(username);
   const follow = useFollow(profile?.account._id, username);
-
-  const isOwnProfile = currentUser?.username === username;
+  
+  const isOwnProfile = currentUser?.account?.username === username;
 
   const [avatarUrlError, setAvatarUrlError] = useState(false)
   const [coverImgError, setCoverImageError] = useState(false)
 
   const fullName = `${profile?.firstName} ${profile?.lastName}`
 
-  console.log(profile)
+  // console.log(profile)
   
   // ── Loading ──────────────────────────────────────────────
   if (isLoading) {

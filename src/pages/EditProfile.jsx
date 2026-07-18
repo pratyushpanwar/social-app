@@ -42,6 +42,7 @@ function EditProfile() {
     function handleSave(){
         const firstName = fullName.split(" ")[0]
         const lastName = fullName.split(" ")[1]
+        console.log(firstName, lastName)
         updateProfile.mutate({ bio, location, firstName, lastName })
     }
   return (
@@ -113,16 +114,16 @@ function EditProfile() {
             className="w-20 h-20 rounded-full border-4 border-base-100 overflow-hidden cursor-pointer group relative"
             onClick={() => avatarRef.current?.click()}
           >
-            {(avatarPreview || user?.avatar?.url) ? (
+            {(avatarPreview || user?.account?.avatar?.url) ? (
               <img
-                src={avatarPreview || user.avatar.url}
-                alt={user?.username}
+                src={avatarPreview || user?.account?.avatar.url}
+                alt={user?.account?.username}
                 className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full bg-primary flex items-center justify-center">
                 <span className="text-primary-content text-2xl font-bold">
-                  {user?.username?.[0]?.toUpperCase()}
+                  {user?.account?.username?.[0]?.toUpperCase()}
                 </span>
               </div>
             )}
@@ -153,7 +154,7 @@ function EditProfile() {
           <input
             type="text"
             className="input input-bordered w-full bg-base-200 cursor-not-allowed"
-            value={user?.username ?? ''}
+            value={user?.account?.username ?? ''}
             readOnly
           />
           <label className="label py-1">
