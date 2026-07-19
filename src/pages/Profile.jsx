@@ -8,7 +8,7 @@ import PostSkeleton from '../components/PostSkeleton';
 import { useState } from 'react';
 
 function Profile() {
-  useMyProfile()
+  // useMyProfile()
   const { username } = useParams();
   console.log(username);
   
@@ -19,7 +19,7 @@ function Profile() {
   const { data: posts = [], isLoading: postsLoading } = useUserPosts(username);
   const follow = useFollow(profile?.account._id, username);
   
-  const isOwnProfile = currentUser?.account?.username === username;
+  const isOwnProfile = currentUser?.username === username;
 
   const [avatarUrlError, setAvatarUrlError] = useState(false)
   const [coverImgError, setCoverImageError] = useState(false)

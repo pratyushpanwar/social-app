@@ -1,19 +1,32 @@
 import React from 'react'
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ArrowLeft, Camera } from 'lucide-react';
 import { useUpdateProfile, useUpdateCoverImage, useUpdateAvatar } from '../hooks/useEditProfile';
+import { useMyProfile } from '../hooks/useProfile';
 
 function EditProfile() {
 
     const navigate = useNavigate()
     const user     = useSelector(state => state.auth.user)
     console.log(user);
+
+    const { data: myProfile, isLoading } = useMyProfile();  
     
-    const [bio, setBio] = useState(user?.bio ?? '')
-    const [location, setLocation] = useState(user?.location ?? '')
-    const [fullName, setFullName] = useState(`${user?.firstName} ${user?.lastName}` ?? '')
+    
+    const [bio, setBio] = useState('')
+    const [location, setLocation] = useState('')
+    const [fullName, setFullName] = useState('')
+
+    useEffect(() => {
+    if (!myProfile) return;
+    setBio(myProfile.bio ?? '');
+    setLocation(myProfile.location ?? '');
+    const first = myProfile.firstName ?? '';
+    const last  = myProfile.lastName  ?? '';
+    setFullName(`${first} ${last}`.trim());
+  }, [myProfile]);
 
     const [coverPreview, setCoverPreview] = useState(null);
     const [avatarPreview, setAvatarPreview] = useState(null)
@@ -40,11 +53,14 @@ function EditProfile() {
     }
 
     function handleSave(){
-        const firstName = fullName.split(" ")[0]
-        const lastName = fullName.split(" ")[1]
-        console.log(firstName, lastName)
-        updateProfile.mutate({ bio, location, firstName, lastName })
+      const parts = fullName.trim().split(/\s+/);
+      const firstName = parts[0] || '';
+      const lastName = parts.slice(1).join(' ')
+      console.log(firstName, lastName)
+      updateProfile.mutate({ bio, location, firstName, lastName })
     }
+
+    
   return (
     <div>
 
@@ -78,9 +94,9 @@ function EditProfile() {
         onClick={() => coverRef.current?.click()}
       >
         {/* show preview → uploaded url → empty */}
-        {(coverPreview || user?.coverImage?.url) && (
+        {(coverPreview || myProfile?.coverImage?.url) && (
           <img
-            src={coverPreview || user?.coverImage.url}
+            src={coverPreview || myProfile?.coverImage.url}
             alt="cover"
             className="w-full h-full object-cover"
             onError={(err) => console.log(err)}
@@ -114,16 +130,16 @@ function EditProfile() {
             className="w-20 h-20 rounded-full border-4 border-base-100 overflow-hidden cursor-pointer group relative"
             onClick={() => avatarRef.current?.click()}
           >
-            {(avatarPreview || user?.account?.avatar?.url) ? (
+            {(avatarPreview || user?.avatar?.url) ? (
               <img
-                src={avatarPreview || user?.account?.avatar.url}
-                alt={user?.account?.username}
+                src={avatarPreview || user?.avatar.url}
+                alt={user?.username}
                 className="w-full h-full object-cover"
               />
             ) : (
               <div className="w-full h-full bg-primary flex items-center justify-center">
                 <span className="text-primary-content text-2xl font-bold">
-                  {user?.account?.username?.[0]?.toUpperCase()}
+                  {user?.username?.[0]?.toUpperCase()}
                 </span>
               </div>
             )}
@@ -154,7 +170,7 @@ function EditProfile() {
           <input
             type="text"
             className="input input-bordered w-full bg-base-200 cursor-not-allowed"
-            value={user?.account?.username ?? ''}
+            value={user?.username ?? ''}
             readOnly
           />
           <label className="label py-1">

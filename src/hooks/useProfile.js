@@ -1,7 +1,5 @@
 import api from "../api/client";
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { setAuth } from "../store/AuthSlice";
 
 export function useProfile(username) {
   return useQuery({
@@ -28,13 +26,11 @@ export function useUserPosts(username) {
 }
 
 export function useMyProfile(){
-  const dispatch = useDispatch()
-  const { token, user } = useSelector(state => state.auth)
+
   return useQuery({
     queryKey: ['myProfile'],
     queryFn: async() => {
       const res = await api.get('/social-media/profile');
-      dispatch(setAuth({ user: res.data.data, token:token }))
       return res.data.data
     }
   })
